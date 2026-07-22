@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
   const [source, setSource] = useState("");
   const [language, setLanguage] = useState("English");
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -47,7 +48,7 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:8000/api/upload", {
+      const res = await fetch(`${API_BASE}/api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -94,7 +95,7 @@ export default function Home() {
       { id: 4, text: "Constructing RAG vector matrix...", num: "05", status: "pending" }
     ]);
 
-    const url = `http://localhost:8000/api/process-stream?source=${encodeURIComponent(source)}&language=${language.toLowerCase()}`;
+    const url = `${API_BASE}/api/process-stream?source=${encodeURIComponent(source)}&language=${language.toLowerCase()}`;
     const eventSource = new EventSource(url);
 
     eventSource.onmessage = (event) => {
@@ -162,7 +163,7 @@ export default function Home() {
     setChatLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/api/chat", {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: query }),
